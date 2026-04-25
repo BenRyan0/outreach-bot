@@ -1,4 +1,7 @@
 require("dotenv").config();
+
+const SUFFIX_RE = /\s*,?\s*(LLC|INC|LTD|CORP|CO|PC|LLP|PLLC|INCORPORATED|LIMITED|HOLDINGS|GROUP|ENTERPRISES)\.?$/i;
+const stripSuffix = (name) => (name || "").replace(SUFFIX_RE, "").trim();
 const express = require("express");
 const mongoose = require("mongoose");
 const { Client } = require("@microsoft/microsoft-graph-client");
@@ -273,23 +276,22 @@ app.get("/approved-applications/outreach/test/:job_id", async (req, res) => {
     const record = await ApprovedApplication.findOne({ job_id: req.params.job_id }).lean();
     if (!record) return res.status(404).json({ success: false, error: "Record not found" });
 
+    const SIGN    = "Talk soon,\nSarah Mitchell\nSenior Underwriter, Luna Lending";
     const name    = record.first_name || "there";
-    const SIGN    = "Talk soon,\nSarah Mitchell\nLuna Lending";
-    let body      = (record.message || "")
-      .replace(/\[Client Name\]/gi, name)
-      .replace(/\[Name\]/gi, name)
-      .replace(/\[Your Name\]/gi, SIGN);
+    const amount  = record.offer_amount ? "$" + Number(record.offer_amount).toLocaleString("en-US") : "your approved amount";
+    const company = stripSuffix(record.company) || "your business";
+    const link    = record.join_url || "";
 
-    if (record.join_url && record.password) {
-      body +=
-        "\n\n──────────────────────────────────────\n" +
-        "Schedule your offer review call:\n" +
-        `Join: ${record.join_url}\n` +
-        `Password: ${record.password}\n` +
-        "──────────────────────────────────────";
-    }
+    const body =
+      `Hi ${name},\n\n` +
+      `Good news. We have prepared a ${amount} offer for ${company} and it is ready for review. ` +
+      `This offer is valid for 14 days so the sooner we connect the better.\n` +
+      `Please book a time with our loan specialists below and we will walk you through the full details on the call.\n\n` +
+      `${link}\n\n` +
+      `Just reply here if you have any questions before booking.\n\n` +
+      SIGN;
 
-    const subject = record.topic || "Your Luna Lending Offer";
+    const subject = "Your Business Funding Offer Is Ready — 14 Days to Review";
 
     console.log(`\n[offer-outreach:test] ────────────────────────────────────────`);
     console.log(`[offer-outreach:test] job_id  : ${record.job_id}`);
@@ -432,24 +434,23 @@ async function renewSubscription() {
 
 async function backfillSheets() {
   const { renderMissingInfo } = require("./templates/missingInfo");
-  const SIGNATURE = "Talk soon,\nSarah Mitchell\nLuna Lending";
+  const SIGNATURE = "Talk soon,\nSarah Mitchell\nSenior Underwriter, Luna Lending";
 
   // Reconstruct the offer email body the same way offerOutreach.js does
   function buildOfferBody(app) {
-    const name = app.first_name || "there";
-    let body = (app.message || "")
-      .replace(/\[Client Name\]/gi, name)
-      .replace(/\[Name\]/gi, name)
-      .replace(/\[Your Name\]/gi, SIGNATURE);
-    if (app.join_url && app.password) {
-      body +=
-        "\n\n──────────────────────────────────────\n" +
-        "Schedule your offer review call:\n" +
-        `Join: ${app.join_url}\n` +
-        `Password: ${app.password}\n` +
-        "──────────────────────────────────────";
-    }
-    return body;
+    const name    = app.first_name || "there";
+    const amount  = app.offer_amount ? "$" + Number(app.offer_amount).toLocaleString("en-US") : "your approved amount";
+    const company = stripSuffix(app.company) || "your business";
+    const link    = app.join_url || "";
+    return (
+      `Hi ${name},\n\n` +
+      `Good news. We have prepared a ${amount} offer for ${company} and it is ready for review. ` +
+      `This offer is valid for 14 days so the sooner we connect the better.\n` +
+      `Please book a time with our loan specialists below and we will walk you through the full details on the call.\n\n` +
+      `${link}\n\n` +
+      `Just reply here if you have any questions before booking.\n\n` +
+      SIGNATURE
+    );
   }
 
   // Reconstruct the missing-doc email body from the stored template_key (no LLM needed)

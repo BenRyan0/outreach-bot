@@ -3,24 +3,16 @@
 const { sendAndTrack } = require("../graph/sendAndTrack");
 const { upsertSentRow, MISSING_DOCS_SHEET } = require("../sheets/googleSheets");
 
-const TEST_MODE = process.env.OUTREACH_TEST_MODE === "true";
+const TEST_MODE    = process.env.OUTREACH_TEST_MODE === "true";
+const JOB_ENABLED  = process.env.MISSING_DOC_OUTREACH_ENABLED !== "false";
 
-// When OUTREACH_TEST_MODE=true in .env, no email is sent — full message is logged instead.
 async function sendMessage({ to, subject, body, template_key, job_id }) {
   if (TEST_MODE) {
-    console.log(`\n[outreach:test-mode] ────────────────────────────────────────`);
-    console.log(`[outreach:test-mode] job_id       : ${job_id}`);
-    console.log(`[outreach:test-mode] to           : ${to}`);
-    console.log(`[outreach:test-mode] subject      : ${subject}`);
-    console.log(`[outreach:test-mode] template_key : ${template_key}`);
-    console.log(`[outreach:test-mode] message:\n`);
-    console.log(body.split("\n").map((l) => `  ${l}`).join("\n"));
-    console.log(`[outreach:test-mode] ────────────────────────────────────────\n`);
+    console.log(`[outreach:test-mode] job_id=${job_id} to=${to}\n${body}`);
     return { delivered: false, test_mode: true };
   }
 
-  const htmlBody = `<pre style="font-family:sans-serif;white-space:pre-wrap">${body}</pre>`;
-  const { conversationId, internetMessageId } = await sendAndTrack(to, subject, htmlBody);
+  const { conversationId, internetMessageId } = await sendAndTrack(to, subject, body);
   console.log(`[outreach] Email sent via Graph → job_id=${job_id} conversationId=${conversationId}`);
   return { delivered: true, conversationId, internetMessageId };
 }
@@ -31,6 +23,11 @@ async function sendMessage({ to, subject, body, template_key, job_id }) {
 // `limit` is the maximum number of emails this run is allowed to send
 // (allocated by dailyLimit.js from the shared SENDER_DAILY_LIMIT budget).
 async function runOutreachJob(MissingDoc, classify, limit = Infinity) {
+  if (!JOB_ENABLED) {
+    console.log(`[outreach] Missing-doc outreach disabled (MISSING_DOC_OUTREACH_ENABLED=false) — skipping`);
+    return;
+  }
+
   console.log(`[outreach] Job started — ${new Date().toISOString()} (limit=${limit})`);
 
   if (limit === 0) {

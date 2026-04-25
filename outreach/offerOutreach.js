@@ -3,33 +3,47 @@
 const { sendAndTrack } = require("../graph/sendAndTrack");
 const { upsertSentRow, APPROVED_SHEET } = require("../sheets/googleSheets");
 
-const TEST_MODE   = process.env.OUTREACH_TEST_MODE === "true";
-const SENDER_NAME = "Sarah Mitchell";
-const SIGNATURE   = "Talk soon,\nSarah Mitchell\nLuna Lending";
+const TEST_MODE    = process.env.OUTREACH_TEST_MODE === "true";
+const JOB_ENABLED  = process.env.APPROVED_OUTREACH_ENABLED !== "false";
+const SENDER_NAME  = "Sarah Mitchell";
+const SIGNATURE   = "Talk soon,\nSarah Mitchell\nSenior Underwriter, Luna Lending";
+
+const SUFFIX_RE = /\s*,?\s*(LLC|INC|LTD|CORP|CO|PC|LLP|PLLC|INCORPORATED|LIMITED|HOLDINGS|GROUP|ENTERPRISES)\.?$/i;
+
+function stripSuffix(name) {
+  return (name || "").replace(SUFFIX_RE, "").trim();
+}
+
+function formatAmount(amount) {
+  if (!amount && amount !== 0) return "your approved amount";
+  return "$" + Number(amount).toLocaleString("en-US");
+}
 
 function buildBody(record) {
-  const name = record.first_name || "there";
+  const name    = record.first_name || "there";
+  const amount  = formatAmount(record.offer_amount);
+  const company = stripSuffix(record.company) || "your business";
+  const link    = record.join_url || "";
 
-  let body = (record.message || "")
-    .replace(/\[Client Name\]/gi, name)
-    .replace(/\[Name\]/gi, name)
-    .replace(/\[Your Name\]/gi, SIGNATURE);
-
-  if (record.join_url && record.password) {
-    body +=
-      "\n\n──────────────────────────────────────\n" +
-      "Schedule your offer review call:\n" +
-      `Join: ${record.join_url}\n` +
-      `Password: ${record.password}\n` +
-      "──────────────────────────────────────";
-  }
-
-  return body;
+  return (
+    `Hi ${name},\n\n` +
+    `Good news. We have prepared a ${amount} offer for ${company} and it is ready for review. ` +
+    `This offer is valid for 14 days so the sooner we connect the better.\n` +
+    `Please book a time with our loan specialists below and we will walk you through the full details on the call.\n\n` +
+    `${link}\n\n` +
+    `Just reply here if you have any questions before booking.\n\n` +
+    SIGNATURE
+  );
 }
 
 // `limit` is the maximum number of emails this run is allowed to send
 // (allocated by dailyLimit.js from the shared SENDER_DAILY_LIMIT budget).
 async function runOfferOutreachJob(ApprovedApplication, ApprovedApplicationOutreach, limit = Infinity) {
+  if (!JOB_ENABLED) {
+    console.log(`[offer-outreach] Approved-application outreach disabled (APPROVED_OUTREACH_ENABLED=false) — skipping`);
+    return;
+  }
+
   console.log(`[offer-outreach] Job started — ${new Date().toISOString()} (limit=${limit})`);
 
   if (limit === 0) {
@@ -65,16 +79,10 @@ async function runOfferOutreachJob(ApprovedApplication, ApprovedApplicationOutre
     }
 
     const body    = buildBody(record);
-    const subject = record.topic || "Your Luna Lending Offer";
+    const subject = "Your Business Funding Offer Is Ready — 14 Days to Review";
 
     if (TEST_MODE) {
-      console.log(`\n[offer-outreach:test-mode] ────────────────────────────────────────`);
-      console.log(`[offer-outreach:test-mode] job_id  : ${record.job_id}`);
-      console.log(`[offer-outreach:test-mode] to      : ${record.email}`);
-      console.log(`[offer-outreach:test-mode] subject : ${subject}`);
-      console.log(`[offer-outreach:test-mode] message:\n`);
-      console.log(body.split("\n").map((l) => `  ${l}`).join("\n"));
-      console.log(`[offer-outreach:test-mode] ────────────────────────────────────────\n`);
+      console.log(`[offer-outreach:test-mode] job_id=${record.job_id} to=${record.email}\n${body}`);
       sent++;
       continue;
     }
@@ -87,11 +95,10 @@ async function runOfferOutreachJob(ApprovedApplication, ApprovedApplicationOutre
     );
 
     try {
-      const htmlBody = `<pre style="font-family:sans-serif;white-space:pre-wrap">${body}</pre>`;
       const { conversationId, internetMessageId } = await sendAndTrack(
         record.email,
         subject,
-        htmlBody,
+        body,
         SENDER_NAME
       );
 

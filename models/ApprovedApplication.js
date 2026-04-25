@@ -2,14 +2,16 @@ const mongoose = require("mongoose");
 
 const approvedApplicationSchema = new mongoose.Schema(
   {
-    job_id:    { type: String, required: true, unique: true },
-    email:     { type: String, required: true },
-    first_name: String,
-    last_name:  String,
-    topic:     String,
-    message:   String,
-    join_url:  String,
-    password:  String,
+    job_id:       { type: String, required: true, unique: true },
+    email:        { type: String, required: true },
+    first_name:   String,
+    last_name:    String,
+    company:      String,
+    offer_amount: Number,
+    topic:        String,
+    message:      String,
+    join_url:     String,
+    password:     String,
   },
   { timestamps: true }
 );
