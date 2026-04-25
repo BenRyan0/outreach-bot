@@ -18,28 +18,21 @@
 // Placeholders:
 //   {{name}}         — lead first name
 //   {{company}}      — business name
-//   {{apply_link}}   — link to the application or reply instructions
-//
-// Usage:
-//   const { MISSING_INFO_TEMPLATES, renderMissingInfo } = require('./missing_info_templates');
-//   const body = renderMissingInfo('missing_info__dob_ssn', lead, 'https://www.lunalend.com/apply');
+//   {{apply_link}}   — link to the application resubmission page
 
 const APPLY = 'https://www.lunalend.com/apply';
-
-const SIGN = `Talk soon,\nLinda Lopez\nSenior Underwriter, Luna Lending`;
+const SIGN  = `Talk soon,\nLinda Lopez\nSenior Underwriter, Luna Lending`;
 
 const MISSING_INFO_TEMPLATES = {
-
-  // ─── Single field missing ──────────────────────────────────────────────────
 
   missing_info__dob:
 `Hi {{name}},
 
-We are almost there with {{company}}'s application. The one thing we still need is your date of birth.
+We are almost there with your application. The one thing we still need is your date of birth.
 
-You can reply to this email with it or add it directly through the application at {{apply_link}}.
+Please resubmit your application at the link below with your date of birth included and we can move forward right away.
 
-Once we have that we can move forward right away.
+{{apply_link}}
 
 ${SIGN}`,
 
@@ -47,11 +40,11 @@ ${SIGN}`,
   missing_info__ssn:
 `Hi {{name}},
 
-We are almost there with {{company}}'s application. The one thing we still need is your Social Security Number.
+We are almost there with your application. The one thing we still need is your Social Security Number.
 
-You can reply to this email with it or submit it securely through the application at {{apply_link}}.
+Please resubmit your application at the link below with your SSN included and we can move forward right away.
 
-Once we have that we can move forward right away.
+{{apply_link}}
 
 ${SIGN}`,
 
@@ -59,11 +52,11 @@ ${SIGN}`,
   missing_info__vat:
 `Hi {{name}},
 
-We are almost there with {{company}}'s application. The one thing we still need is your VAT number.
+We are almost there with your application. The one thing we still need is your VAT number.
 
-You can reply to this email with it or add it through the application at {{apply_link}}.
+Please resubmit your application at the link below with your VAT number included and we can move forward right away.
 
-Once we have that we can move forward right away.
+{{apply_link}}
 
 ${SIGN}`,
 
@@ -71,25 +64,27 @@ ${SIGN}`,
   missing_info__stmt:
 `Hi {{name}},
 
-We received the bank statements for {{company}} but the ones on file are personal account statements. We need business bank statements to move forward.
+We received your bank statements but the ones on file are personal account statements. We need business bank statements to move forward.
 
-Please upload your business account statements through the application at {{apply_link}} or reply to this email and I will walk you through it.
+Please resubmit your application at the link below and upload your business account statements this time.
+
+{{apply_link}}
 
 Once we have the right statements we can get your offer together quickly.
 
 ${SIGN}`,
 
 
-  // ─── Two fields missing ────────────────────────────────────────────────────
-
   missing_info__dob_ssn:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
 Your date of birth and your Social Security Number are both missing from the file.
 
-You can reply to this email with both or add them through the application at {{apply_link}}.
+Please resubmit your application at the link below with both items included.
+
+{{apply_link}}
 
 Once we have those we are good to go.
 
@@ -99,11 +94,13 @@ ${SIGN}`,
   missing_info__dob_stmt:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
-First, your date of birth is missing. Second, the bank statements on file are personal account statements and we need business bank statements instead.
+Your date of birth is missing and the bank statements on file are personal account statements. We need your date of birth and business bank statements instead.
 
-You can reply to this email with your date of birth and upload the right statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your date of birth filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have both we can get your offer together.
 
@@ -113,11 +110,13 @@ ${SIGN}`,
   missing_info__dob_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
 Your date of birth and your VAT number are both missing from the file.
 
-You can reply to this email with both or add them through the application at {{apply_link}}.
+Please resubmit your application at the link below with both items included.
+
+{{apply_link}}
 
 Once we have those we are good to go.
 
@@ -127,11 +126,13 @@ ${SIGN}`,
   missing_info__ssn_stmt:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
-First, your Social Security Number is missing. Second, the bank statements on file are personal account statements and we need business bank statements instead.
+Your Social Security Number is missing and the bank statements on file are personal account statements. We need your SSN and business bank statements instead.
 
-You can reply to this email with your SSN and upload the right statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your SSN filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have both we can get your offer together.
 
@@ -141,11 +142,13 @@ ${SIGN}`,
   missing_info__ssn_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
 Your Social Security Number and your VAT number are both missing from the file.
 
-You can reply to this email with both or add them through the application at {{apply_link}}.
+Please resubmit your application at the link below with both items included.
+
+{{apply_link}}
 
 Once we have those we are good to go.
 
@@ -155,27 +158,29 @@ ${SIGN}`,
   missing_info__stmt_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and need two things before we can move forward.
+We are reviewing your application and need two things before we can move forward.
 
-First, your VAT number is missing. Second, the bank statements on file are personal account statements and we need business bank statements instead.
+Your VAT number is missing and the bank statements on file are personal account statements. We need your VAT number and business bank statements instead.
 
-You can reply to this email with your VAT number and upload the right statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your VAT number filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have both we can get your offer together.
 
 ${SIGN}`,
 
 
-  // ─── Three fields missing ──────────────────────────────────────────────────
-
   missing_info__dob_ssn_stmt:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and there are three things we need before we can move forward.
+We are reviewing your application and there are three things we need before we can move forward.
 
 Your date of birth and Social Security Number are both missing. The bank statements on file are also personal account statements and we need business bank statements instead.
 
-You can reply to this email with your date of birth and SSN and upload the business statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your date of birth and SSN filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have all three we can get your offer put together.
 
@@ -185,11 +190,13 @@ ${SIGN}`,
   missing_info__dob_ssn_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and there are three things we need before we can move forward.
+We are reviewing your application and there are three things we need before we can move forward.
 
 Your date of birth, Social Security Number, and VAT number are all missing from the file.
 
-You can reply to this email with all three or add them through the application at {{apply_link}}.
+Please resubmit your application at the link below with all three items included.
+
+{{apply_link}}
 
 Once we have everything we can move forward right away.
 
@@ -199,11 +206,13 @@ ${SIGN}`,
   missing_info__dob_stmt_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and there are three things we need before we can move forward.
+We are reviewing your application and there are three things we need before we can move forward.
 
 Your date of birth and VAT number are both missing. The bank statements on file are also personal account statements and we need business bank statements instead.
 
-You can reply to this email with your date of birth and VAT number and upload the business statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your date of birth and VAT number filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have all three we can get your offer put together.
 
@@ -213,27 +222,29 @@ ${SIGN}`,
   missing_info__ssn_stmt_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and there are three things we need before we can move forward.
+We are reviewing your application and there are three things we need before we can move forward.
 
 Your Social Security Number and VAT number are both missing. The bank statements on file are also personal account statements and we need business bank statements instead.
 
-You can reply to this email with your SSN and VAT number and upload the business statements through the application at {{apply_link}}.
+Please resubmit your application at the link below with your SSN and VAT number filled in and your business bank statements uploaded.
+
+{{apply_link}}
 
 Once we have all three we can get your offer put together.
 
 ${SIGN}`,
 
 
-  // ─── All four missing ──────────────────────────────────────────────────────
-
   missing_info__dob_ssn_stmt_vat:
 `Hi {{name}},
 
-We are reviewing {{company}}'s application and there are a few things we need before we can move forward.
+We are reviewing your application and there are a few things we need before we can move forward.
 
 Your date of birth, Social Security Number, and VAT number are all missing from the file. The bank statements on file are also personal account statements and we need business bank statements instead.
 
-The fastest way to get everything sorted is to go through the application at {{apply_link}} where you can add the missing details and upload the right statements in one go. You can also reply to this email and I will walk you through each item one at a time.
+Please resubmit your application at the link below. Fill in your date of birth, SSN, and VAT number and upload your business bank statements all in one go.
+
+{{apply_link}}
 
 Once we have everything we can get your offer together right away.
 
@@ -241,18 +252,6 @@ ${SIGN}`,
 
 };
 
-
-// ─── Renderer ─────────────────────────────────────────────────────────────────
-// Build the template key from the missing fields array, then render it.
-//
-// missingFields — array of field codes in any order, e.g. ['ssn', 'dob']
-//                 Valid codes: 'dob', 'ssn', 'vat', 'stmt'
-// lead          — { name, company }
-// applyLink     — the URL to the application or a reply instruction string
-//
-// Example:
-//   renderMissingInfo(['ssn', 'dob'], { name: 'Edward', company: 'Pops Originals' });
-//   → uses missing_info__dob_ssn (fields sorted alphabetically)
 
 function renderMissingInfo(missingFields, lead = {}, applyLink = APPLY) {
   if (!Array.isArray(missingFields) || missingFields.length === 0) {
@@ -265,7 +264,6 @@ function renderMissingInfo(missingFields, lead = {}, applyLink = APPLY) {
     throw new Error(`Invalid field codes: ${invalid.join(', ')}. Valid codes: ${VALID.join(', ')}`);
   }
 
-  // Sort alphabetically so key is consistent regardless of input order
   const sorted = [...new Set(missingFields)].sort();
   const key = 'missing_info__' + sorted.join('_');
 
@@ -280,17 +278,10 @@ function renderMissingInfo(missingFields, lead = {}, applyLink = APPLY) {
     .replace(/\{\{apply_link\}\}/g, applyLink);
 }
 
-// ─── Key lookup helper ────────────────────────────────────────────────────────
-// Returns the template key for a given set of missing fields.
-// Useful for logging or debugging without rendering the full template.
-
 function getMissingInfoKey(missingFields) {
   const sorted = [...new Set(missingFields)].sort();
   return 'missing_info__' + sorted.join('_');
 }
-
-// ─── All valid keys ───────────────────────────────────────────────────────────
-// Reference list of all 15 keys in alphabetical order.
 
 const ALL_MISSING_INFO_KEYS = Object.keys(MISSING_INFO_TEMPLATES).sort();
 
