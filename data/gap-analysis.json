@@ -1,0 +1,226 @@
+{
+  "schema_id": "lunalend_outreach_categories_v1",
+  "purpose": "Determine the specific reasons to reach out to a lead or customer based on gaps, errors, or anomalies detected in their LunaLend application. Each variant represents a distinct outreach trigger. Each sub_variant is a specific condition that, when matched, generates a reason to contact the applicant.",
+  "instruction": "Evaluate the application record against each sub_variant condition. For every matched condition, generate one outreach reason. Combine all matched reasons into a single outreach summary per applicant. Do not reach out for clean checks. Prioritize critical and high severity items first in the outreach message.",
+  "variants": [
+    {
+      "id": "VAR-001",
+      "label": "Missing Identity Information",
+      "description": "Core personal identity fields are absent. Applicant must provide these before any verification can proceed.",
+      "outreach_trigger": "We are missing key personal information needed to verify your identity.",
+      "sub_variants": [
+        {
+          "id": "VAR-001-01",
+          "label": "SSN Missing",
+          "severity": "critical",
+          "detect_when": "ssn field is null, empty, or is_ssn_valid is false",
+          "outreach_line": "Your Social Security Number (SSN) is missing or invalid. Please provide your SSN to continue.",
+          "example_match": "ssn: null, is_ssn_valid: false"
+        },
+        {
+          "id": "VAR-001-02",
+          "label": "Date of Birth Missing",
+          "severity": "critical",
+          "detect_when": "date_of_birth field is null or empty",
+          "outreach_line": "Your date of birth is missing. Please provide your date of birth to continue.",
+          "example_match": "date_of_birth: null"
+        },
+        {
+          "id": "VAR-001-03",
+          "label": "VAT or EIN Missing",
+          "severity": "critical",
+          "detect_when": "vat field is null, empty, or is_vat_valid is false",
+          "outreach_line": "Your VAT or EIN is missing or invalid. Please provide your business tax identification number.",
+          "example_match": "vat: null, is_vat_valid: false"
+        },
+        {
+          "id": "VAR-001-04",
+          "label": "Name Fields Contain Non-Name Data",
+          "severity": "high",
+          "detect_when": "first_name or last_name contains a city, state, address, or clearly non-personal value",
+          "outreach_line": "The name fields on your application appear to contain incorrect information. Please confirm your legal first and last name.",
+          "example_match": "first_name: 'Southfield', last_name: 'Michigan'"
+        }
+      ]
+    },
+    {
+      "id": "VAR-002",
+      "label": "Bank Statement Issues",
+      "description": "Submitted bank statements are personal instead of business, incomplete, or outdated. Business bank statements are required for underwriting.",
+      "outreach_trigger": "There is an issue with one or more of your submitted bank statements.",
+      "sub_variants": [
+        {
+          "id": "VAR-002-01",
+          "label": "Personal Account Statements Submitted",
+          "severity": "critical",
+          "detect_when": "one or more statements have account_type of 'Personal' instead of 'Business'",
+          "outreach_line": "One or more of your submitted bank statements are from a personal account. Please resubmit using business bank statements only.",
+          "example_match": "account_type: 'Personal' on 3 of 4 statements"
+        },
+        {
+          "id": "VAR-002-02",
+          "label": "Account Holder Name Does Not Match Business",
+          "severity": "high",
+          "detect_when": "account_holder_name on statements does not match company name in user details and name_match_status is Mismatch",
+          "outreach_line": "The name on your bank statements does not match your business name on file. Please confirm the account belongs to your business.",
+          "example_match": "account_holder_name: 'JOHN ANTHONY VEGA', company: 'Hfe llc', name_match_status: 'Mismatch'"
+        },
+        {
+          "id": "VAR-002-03",
+          "label": "Bank Statements Not Recent",
+          "severity": "critical",
+          "detect_when": "most recent statement date is older than 60 days from the application processing date",
+          "outreach_line": "Your bank statements are outdated. Please provide statements from the last 3 months.",
+          "example_match": "most recent statement_date is more than 60 days before processed_at"
+        },
+        {
+          "id": "VAR-002-04",
+          "label": "Insufficient Number of Statements",
+          "severity": "high",
+          "detect_when": "statements_count is less than the minimum required or has_minimum_statements is false",
+          "outreach_line": "We require a minimum number of bank statements and your submission does not meet that requirement. Please provide additional statements.",
+          "example_match": "has_minimum_statements: false"
+        }
+      ]
+    },
+    {
+      "id": "VAR-003",
+      "label": "Active MCA or Debt Detected",
+      "description": "One or more bank statements show existing MCA or financing activity. This must be disclosed and reviewed before funding.",
+      "outreach_trigger": "We detected existing financing activity on your bank statements that requires clarification.",
+      "sub_variants": [
+        {
+          "id": "VAR-003-01",
+          "label": "MCA Activity Found on Statement",
+          "severity": "high",
+          "detect_when": "mca_details array on any statement is non-empty",
+          "outreach_line": "We detected existing MCA or financing activity on your bank statements. Please disclose all current outstanding advances or loans.",
+          "example_match": "mca_details: [{amount: 2006.31, company: 'KOALAFI DES:LEASE FUND'}] on March statement"
+        },
+        {
+          "id": "VAR-003-02",
+          "label": "Undisclosed MCA Not Self-Declared",
+          "severity": "medium",
+          "detect_when": "mca_details found on statements but no formal self-declaration or MCA disclosure form is present in the record",
+          "outreach_line": "Please complete an MCA disclosure form listing all current advances, loans, or lease obligations.",
+          "example_match": "mca_details present but no declaration document attached"
+        }
+      ]
+    },
+    {
+      "id": "VAR-004",
+      "label": "Identity Verification Mismatch",
+      "description": "Key identity fields do not match across the application or against verified sources.",
+      "outreach_trigger": "There is a mismatch in the identity information provided on your application.",
+      "sub_variants": [
+        {
+          "id": "VAR-004-01",
+          "label": "Name Mismatch Between Application and Statements",
+          "severity": "high",
+          "detect_when": "name_match_status is Mismatch",
+          "outreach_line": "The name on your application does not match the name on your bank statements. Please confirm your legal name and resubmit matching documents.",
+          "example_match": "name_match_status: 'Mismatch'"
+        },
+        {
+          "id": "VAR-004-02",
+          "label": "SSN Does Not Pass Validation",
+          "severity": "critical",
+          "detect_when": "is_ssn_valid is false and ssn is non-null",
+          "outreach_line": "The SSN you provided could not be validated. Please double-check and resubmit your Social Security Number.",
+          "example_match": "ssn: provided but is_ssn_valid: false"
+        },
+        {
+          "id": "VAR-004-03",
+          "label": "VAT or EIN Does Not Pass Validation",
+          "severity": "critical",
+          "detect_when": "is_vat_valid is false and vat is non-null",
+          "outreach_line": "The VAT or EIN you provided could not be validated. Please verify and resubmit your business tax ID.",
+          "example_match": "vat: provided but is_vat_valid: false"
+        }
+      ]
+    },
+    {
+      "id": "VAR-005",
+      "label": "Financial Profile Concerns",
+      "description": "Deposit amounts, revenue figures, or financial patterns raise questions that require applicant clarification.",
+      "outreach_trigger": "We have questions regarding the financial information reflected in your application.",
+      "sub_variants": [
+        {
+          "id": "VAR-005-01",
+          "label": "Average Deposits Below Minimum Threshold",
+          "severity": "high",
+          "detect_when": "average_deposits falls below the lender's minimum qualifying deposit threshold",
+          "outreach_line": "The average monthly deposits across your submitted statements may not meet the minimum requirement. Please contact us to discuss your options.",
+          "example_match": "average_deposits: 7009.47"
+        },
+        {
+          "id": "VAR-005-02",
+          "label": "Significant Deposit Spike in One Month",
+          "severity": "medium",
+          "detect_when": "any single month's total_deposits exceeds the average of all other months by more than 40%",
+          "outreach_line": "We noticed an unusually high deposit in one of your statements. Please provide a brief explanation for this activity.",
+          "example_match": "one month deposits significantly higher than trailing average"
+        },
+        {
+          "id": "VAR-005-03",
+          "label": "Mixed Personal and Business Deposits",
+          "severity": "medium",
+          "detect_when": "statements include a mix of personal and business account types",
+          "outreach_line": "Your submitted statements include both personal and business accounts. Please resubmit using only business account statements.",
+          "example_match": "3 personal statements and 1 business statement submitted"
+        }
+      ]
+    },
+    {
+      "id": "VAR-006",
+      "label": "Fallback — Unclassified Outreach Reason",
+      "description": "Use this when a missing field, anomaly, or system note does not match any condition in VAR-001 through VAR-005. Typically triggered by the note or missing_fields array containing items not covered by existing variants.",
+      "fallback": true,
+      "outreach_trigger": "We noticed an issue with your application that requires your attention.",
+      "instruction": "Assign VAR-006 only after confirming no other variant applies. Use the raw note or missing_fields entry as the basis for the outreach_line. Rephrase it to be customer-facing and actionable.",
+      "sub_variants": [
+        {
+          "id": "VAR-006-01",
+          "label": "System-Flagged Missing Field Not Covered by Other Variants",
+          "severity": "medium",
+          "detect_when": "missing_fields array contains an entry that does not map to any sub_variant in VAR-001 through VAR-005",
+          "outreach_line": "Your application is missing required information. Please review and complete all fields before resubmitting.",
+          "example_match": "any missing_fields entry not already handled by VAR-001 through VAR-005"
+        },
+        {
+          "id": "VAR-006-02",
+          "label": "System Note Contains Unstructured Warning",
+          "severity": "low",
+          "detect_when": "note field is non-null and contains flagged content not represented in any other variant",
+          "outreach_line": "Our system flagged an issue with your application. A member of our team will reach out to assist you.",
+          "example_match": "note: 'The following fields were empty: vat, date_of_birth, ssn'"
+        }
+      ]
+    }
+  ],
+  "output_format": {
+    "description": "Expected LLM output when this schema is used to generate outreach reasons",
+    "example": {
+      "application_id": "string",
+      "applicant_email": "string",
+      "outreach_required": true,
+      "findings": [
+        {
+          "variant_id": "VAR-001",
+          "sub_variant_id": "VAR-001-01",
+          "label": "SSN Missing",
+          "severity": "critical",
+          "outreach_line": "Your Social Security Number (SSN) is missing or invalid. Please provide your SSN to continue."
+        }
+      ],
+      "outreach_summary": "Concatenated or grouped outreach_lines ordered by severity for use in email, SMS, or call script",
+      "total_findings": "integer",
+      "severity_breakdown": {
+        "critical": "integer",
+        "high": "integer",
+        "medium": "integer",
+        "low": "integer"
+      }
+    }
+  }
+}

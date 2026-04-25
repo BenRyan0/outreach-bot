@@ -1,0 +1,517 @@
+[{
+  "_id": {
+    "$oid": "69ea4f66151143d782c4d563"
+  },
+  "job_id": "2f62f987-8e87-40e5-b654-211ea8e57982",
+  "status": "completed",
+  "data": {
+    "job_id": "2f62f987-8e87-40e5-b654-211ea8e57982",
+    "user_details": {
+      "userid": "319",
+      "vat": "47-4513679",
+      "company": "Hfe llc",
+      "date_of_birth": "1961-07-07",
+      "ssn": "385-64-6184",
+      "email": "samberry@theleftys.com",
+      "first_name": "Nayfe ",
+      "last_name": "Berry"
+    },
+    "statements_count": 4,
+    "has_minimum_statements": true,
+    "is_recent": true,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 69681.465,
+    "name_match_status": "Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_9578_2025-10-01_2025-10-31-Ld1sdOhPambmThvfgn7x6ZT0UeFtBm.pdf",
+        "account_holder_name": "HFE , LLC",
+        "total_deposits": 63808.3,
+        "statement_date": "2025-10-31",
+        "mca_details": []
+      },
+      {
+        "filename": "DepositAccountStatement_9578_2025-11-01_2025-11-30-oDjhdTv1naik7dFLImYNBpxNQRTLDu.pdf",
+        "account_holder_name": "HFE , LLC",
+        "total_deposits": 63396.37,
+        "statement_date": "2025-11-30",
+        "mca_details": []
+      },
+      {
+        "filename": "DepositAccountStatement_9578_2025-12-01_2025-12-31-hiyVW784TqiOSJX8gugd0Gk85iZFcG.pdf",
+        "account_holder_name": "HFE, LLC",
+        "total_deposits": 55081.84,
+        "statement_date": "2025-12-31",
+        "mca_details": []
+      },
+      {
+        "filename": "DepositAccountStatement_9578_2026-01-01_2026-01-31-hIqUdrvzYoWE3pHQI4PP9smNMYz7Hb.pdf",
+        "account_holder_name": "HFE, LLC",
+        "total_deposits": 96439.35,
+        "statement_date": "2026-01-31",
+        "mca_details": []
+      }
+    ],
+    "final_bucket": "Over $10,000",
+    "note": null
+  },
+  "createdAt": {
+    "$date": "2026-04-23T16:57:10.715Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-23T16:57:10.715Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ea578eeac26273c6ad924c"
+  },
+  "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+  "status": "completed",
+  "data": {
+    "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+    "user_details": {
+      "userid": "511",
+      "vat": "39-4151324",
+      "company": "Signallink Protocol",
+      "date_of_birth": "1989-08-29",
+      "ssn": "158-86-7756",
+      "email": "Drewphillips215@gmail.com",
+      "first_name": "Drew",
+      "last_name": "Phillips "
+    },
+    "statements_count": 1,
+    "has_minimum_statements": false,
+    "is_recent": false,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 0,
+    "name_match_status": "Mismatch",
+    "statements": [
+      {
+        "filename": "GOVA-Application-GOVA-1776821508978.pdf",
+        "account_holder_name": "N/A",
+        "total_deposits": 0,
+        "statement_date": null,
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea578eeac26273c6ad924d"
+        }
+      }
+    ],
+    "final_bucket": "Under $4,000",
+    "note": null
+  },
+  "createdAt": {
+    "$date": "2026-04-23T17:31:58.282Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-23T17:31:58.282Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ea578eeac26273c6ad924f"
+  },
+  "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+  "status": "completed",
+  "data": {
+    "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+    "user_details": {
+      "userid": "511",
+      "vat": "39-4151324",
+      "company": "Signallink Protocol",
+      "date_of_birth": "1989-08-29",
+      "ssn": "158-86-7756",
+      "email": "Drewphillips215@gmail.com",
+      "first_name": "Drew",
+      "last_name": "Phillips "
+    },
+    "statements_count": 1,
+    "has_minimum_statements": false,
+    "is_recent": false,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 0,
+    "name_match_status": "Mismatch",
+    "statements": [
+      {
+        "filename": "GOVA-Application-GOVA-1776821508978.pdf",
+        "account_holder_name": "N/A",
+        "total_deposits": 0,
+        "statement_date": null,
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea578eeac26273c6ad9250"
+        }
+      }
+    ],
+    "final_bucket": "Under $4,000",
+    "note": null
+  },
+  "createdAt": {
+    "$date": "2026-04-23T17:31:58.316Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-23T17:31:58.316Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ea578eeac26273c6ad9252"
+  },
+  "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+  "status": "completed",
+  "data": {
+    "job_id": "ad226dd9-6f1c-447a-8749-92d1a67b9026",
+    "user_details": {
+      "userid": "511",
+      "vat": "39-4151324",
+      "company": "Signallink Protocol",
+      "date_of_birth": "1989-08-29",
+      "ssn": "158-86-7756",
+      "email": "Drewphillips215@gmail.com",
+      "first_name": "Drew",
+      "last_name": "Phillips "
+    },
+    "statements_count": 1,
+    "has_minimum_statements": false,
+    "is_recent": false,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 0,
+    "name_match_status": "Mismatch",
+    "statements": [
+      {
+        "filename": "GOVA-Application-GOVA-1776821508978.pdf",
+        "account_holder_name": "N/A",
+        "total_deposits": 0,
+        "statement_date": null,
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea578eeac26273c6ad9253"
+        }
+      }
+    ],
+    "final_bucket": "Under $4,000",
+    "note": null
+  },
+  "createdAt": {
+    "$date": "2026-04-23T17:31:58.319Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-23T17:31:58.319Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ea6dc53d3b83f8271dfb0a"
+  },
+  "job_id": "7a14c321-1d56-4b2a-9e77-843cb2f10a63",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:06:45.588Z"
+  },
+  "data": {
+    "job_id": "7a14c321-1d56-4b2a-9e77-843cb2f10a63",
+    "user_details": {
+      "userid": "482",
+      "vat": "83-2741056",
+      "company": "Trilo Ventures LLC",
+      "date_of_birth": "1978-03-15",
+      "ssn": "512-77-9023",
+      "email": "marco.deluca@triloventures.net",
+      "first_name": "Marco",
+      "last_name": "DeLuca"
+    },
+    "statements_count": 3,
+    "has_minimum_statements": false,
+    "is_recent": true,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 54821.32,
+    "name_match_status": "Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_4421_2025-11-01_2025-11-30-pKzRmXvL9wTqHnAe2Ys5cBdUoFjG1W.pdf",
+        "account_holder_name": "TRILO VENTURES, LLC",
+        "total_deposits": 48312.9,
+        "statement_date": "2025-11-30",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dc5a1beefd4bba46f4b"
+        }
+      },
+      {
+        "filename": "DepositAccountStatement_4421_2025-12-01_2025-12-31-nWqTyUjKmPsLxOvBrEaCdZhFiGbN7V.pdf",
+        "account_holder_name": "TRILO VENTURES, LLC",
+        "total_deposits": 51440.22,
+        "statement_date": "2025-12-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dc5a1beefd4bba46f4c"
+        }
+      },
+      {
+        "filename": "DepositAccountStatement_4421_2026-01-01_2026-01-31-tRuYwIoPlMkNjHsGfDaQeZcXvBm3A9.pdf",
+        "account_holder_name": "TRILO VENTURES, LLC",
+        "total_deposits": 64710.84,
+        "statement_date": "2026-01-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dc5a1beefd4bba46f4d"
+        }
+      }
+    ],
+    "final_bucket": "Over $10,000",
+    "note": "Missing statement: October 2025"
+  },
+  "status": "completed",
+  "updatedAt": {
+    "$date": "2026-04-23T19:06:45.588Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ea6dcb3d3b83f8271dfb0e"
+  },
+  "job_id": "b8e30c74-5f91-4dc9-ae22-67fd019c3b55",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:06:52.092Z"
+  },
+  "data": {
+    "job_id": "b8e30c74-5f91-4dc9-ae22-67fd019c3b55",
+    "user_details": {
+      "userid": "751",
+      "vat": "61-9034827",
+      "company": "Sunridge Hospitality Inc",
+      "date_of_birth": "1985-11-22",
+      "ssn": "674-30-4451",
+      "email": "priya.nair@sunridgehospitality.com",
+      "first_name": "Priya",
+      "last_name": "Nair"
+    },
+    "statements_count": 2,
+    "has_minimum_statements": false,
+    "is_recent": true,
+    "is_ssn_valid": true,
+    "is_vat_valid": false,
+    "average_deposits": 38905.71,
+    "name_match_status": "Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_8813_2025-12-01_2025-12-31-cVbNmXzLkJhGfDsAqWeTyUiOpRlMn2.pdf",
+        "account_holder_name": "SUNRIDGE HOSPITALITY INC",
+        "total_deposits": 34218.55,
+        "statement_date": "2025-12-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dcca1beefd4bba46f52"
+        }
+      },
+      {
+        "filename": "DepositAccountStatement_8813_2026-01-01_2026-01-31-eRtYuIoWqAsZxCvBnMlKjHgFdSpOaN4.pdf",
+        "account_holder_name": "SUNRIDGE HOSPITALITY INC",
+        "total_deposits": 43592.87,
+        "statement_date": "2026-01-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dcca1beefd4bba46f53"
+        }
+      }
+    ],
+    "final_bucket": "Over $10,000",
+    "note": "Missing statements: October 2025, November 2025"
+  },
+  "status": "completed",
+  "updatedAt": {
+    "$date": "2026-04-23T19:06:52.092Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ea6dd23d3b83f8271dfb14"
+  },
+  "job_id": "d5c72b18-3a04-4e6f-bf99-12ace8741def",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:06:58.725Z"
+  },
+  "data": {
+    "job_id": "d5c72b18-3a04-4e6f-bf99-12ace8741def",
+    "user_details": {
+      "userid": "603",
+      "vat": "29-5618340",
+      "company": "Kelford Auto Group",
+      "date_of_birth": "1970-06-30",
+      "ssn": "291-48-7760",
+      "email": "dan.kelford@kelfordauto.com",
+      "first_name": "Daniel",
+      "last_name": "Kelford"
+    },
+    "statements_count": 2,
+    "has_minimum_statements": false,
+    "is_recent": true,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 71340,
+    "name_match_status": "Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_6602_2025-10-01_2025-10-31-mZxCvBnLkJhGfDsAqWeRtYuIoPlKjN5.pdf",
+        "account_holder_name": "KELFORD AUTO GROUP",
+        "total_deposits": 68120.44,
+        "statement_date": "2025-10-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dd2a1beefd4bba46f57"
+        }
+      },
+      {
+        "filename": "DepositAccountStatement_6602_2026-01-01_2026-01-31-oPlMkNjHgFdSaQwErTyUiZxCvBnLsW8.pdf",
+        "account_holder_name": "KELFORD AUTO GROUP",
+        "total_deposits": 74559.56,
+        "statement_date": "2026-01-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dd2a1beefd4bba46f58"
+        }
+      }
+    ],
+    "final_bucket": "Over $10,000",
+    "note": "Missing statements: November 2025, December 2025"
+  },
+  "status": "completed",
+  "updatedAt": {
+    "$date": "2026-04-23T19:06:58.725Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ea6dd93d3b83f8271dfb17"
+  },
+  "job_id": "e1f09a55-c762-48bb-93d4-56b7ef220c18",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:07:05.160Z"
+  },
+  "data": {
+    "job_id": "e1f09a55-c762-48bb-93d4-56b7ef220c18",
+    "user_details": {
+      "userid": "198",
+      "vat": "54-7823016",
+      "company": "Bluewave Digital Solutions",
+      "date_of_birth": "1990-09-04",
+      "ssn": "440-91-3375",
+      "email": "t.okafor@bluewavedigital.io",
+      "first_name": "Tobenna",
+      "last_name": "Okafor"
+    },
+    "statements_count": 2,
+    "has_minimum_statements": false,
+    "is_recent": false,
+    "is_ssn_valid": true,
+    "is_vat_valid": true,
+    "average_deposits": 27455.19,
+    "name_match_status": "Partial Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_3371_2025-10-01_2025-10-31-hJkLmNoPqRsTuVwXyZaBcDeFgHiJkL1.pdf",
+        "account_holder_name": "BLUEWAVE DIGITAL SOLUTIONS LLC",
+        "total_deposits": 25881.04,
+        "statement_date": "2025-10-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dd9a1beefd4bba46f5c"
+        }
+      },
+      {
+        "filename": "DepositAccountStatement_3371_2025-11-01_2025-11-30-zAbCdEfGhIjKlMnOpQrStUvWxYzAbCd2.pdf",
+        "account_holder_name": "BLUEWAVE DIGITAL SOLUTIONS LLC",
+        "total_deposits": 29029.34,
+        "statement_date": "2025-11-30",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6dd9a1beefd4bba46f5d"
+        }
+      }
+    ],
+    "final_bucket": "$10,000–$50,000",
+    "note": "Missing statements: December 2025, January 2026"
+  },
+  "status": "completed",
+  "updatedAt": {
+    "$date": "2026-04-23T19:07:05.160Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ea6de03d3b83f8271dfb1d"
+  },
+  "job_id": "f3a88d02-7b5e-41cf-a116-90cde4b63f77",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:07:12.610Z"
+  },
+  "data": {
+    "job_id": "f3a88d02-7b5e-41cf-a116-90cde4b63f77",
+    "user_details": {
+      "userid": "527",
+      "vat": "73-1290564",
+      "company": "Castillo & Reyes Partners",
+      "date_of_birth": "1966-01-18",
+      "ssn": "558-22-6690",
+      "email": "r.castillo@castilloreyes.law",
+      "first_name": "Rosa",
+      "last_name": "Castillo"
+    },
+    "statements_count": 1,
+    "has_minimum_statements": false,
+    "is_recent": true,
+    "is_ssn_valid": false,
+    "is_vat_valid": true,
+    "average_deposits": 82100,
+    "name_match_status": "No Match",
+    "statements": [
+      {
+        "filename": "DepositAccountStatement_9901_2026-01-01_2026-01-31-wXyZaBcDeFgHiJkLmNoPqRsTuVwXyZa3.pdf",
+        "account_holder_name": "CASTILLO & REYES LAW GROUP",
+        "total_deposits": 82100,
+        "statement_date": "2026-01-31",
+        "mca_details": [],
+        "_id": {
+          "$oid": "69ea6de0a1beefd4bba46f61"
+        }
+      }
+    ],
+    "final_bucket": "Over $10,000",
+    "note": "Missing statements: October 2025, November 2025, December 2025"
+  },
+  "status": "completed",
+  "updatedAt": {
+    "$date": "2026-04-23T19:07:12.610Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69ea6e0c3d3b83f8271dfb2f"
+  },
+  "job_id": "q0f3Lm",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-04-23T19:07:56.628Z"
+  },
+  "data": {
+    "user_details": null
+  },
+  "status": "initialized",
+  "updatedAt": {
+    "$date": "2026-04-23T19:07:56.628Z"
+  }
+}]

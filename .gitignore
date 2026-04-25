@@ -1,0 +1,11 @@
+.env
+node_modules
+dist
+logs
+*.log
+.DS_Store
+.env
+CLAUDE.md
+.claude
+.OFFER_OUTREACH_PLAN.md
+service-account-key.json
