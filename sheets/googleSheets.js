@@ -8,9 +8,37 @@ const KEY_PATH = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
 const MISSING_DOCS_SHEET = "Missing Docs";
 const APPROVED_SHEET     = "Approved Applications";
 
-const HEADERS       = ["job_id", "email", "email sent", "reply 1", "reply 2", "reply 3", "reply 4", "reply 5", "reply 6", "reply 7", "reply 8", "reply 9", "reply 10"];
-const MAX_REPLIES   = 10;
-const REPLY_COL_START = 3; // 0-indexed — column D
+// Columns the system reads but never overwrites
+const JOB_ID_COL      = 1;   // column B — job_id (manual)
+const EMAIL_COL       = 14;  // column O — email   (manual)
+// Columns the system writes
+const EMAIL_SENT_COL  = 18;  // column S
+const REPLY_COL_START = 19;  // column T
+const MAX_REPLIES     = 10;
+
+const HEADERS = [
+  "note", "job_id", "topic", "message", "password", "offer_amount",
+  "terms_days", "terms_factor_rate", "company", "first_name", "last_name",
+  "EIN", "SSN", "Date of Birth", "email", "Application Email",
+  "Phone number", "Business Phone",
+  "email sent",
+  "reply 1", "reply 2", "reply 3", "reply 4", "reply 5",
+  "reply 6", "reply 7", "reply 8", "reply 9", "reply 10",
+];
+
+// Converts a 0-indexed column number to A1-notation letter(s) (e.g. 0→A, 25→Z, 26→AA)
+function colLetter(idx) {
+  let col = "";
+  let n = idx + 1;
+  while (n > 0) {
+    const rem = (n - 1) % 26;
+    col = String.fromCharCode(65 + rem) + col;
+    n = Math.floor((n - 1) / 26);
+  }
+  return col;
+}
+
+const LAST_COL = colLetter(HEADERS.length - 1); // AC
 
 function isConfigured() {
   return !!(SHEET_ID && KEY_PATH);
@@ -43,7 +71,7 @@ async function ensureSheetAndHeaders(sheets, sheetName) {
     // Write headers immediately — new sheet is guaranteed empty
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
-      range: `${sheetName}!A1:M1`,
+      range: `${sheetName}!A1:${LAST_COL}1`,
       valueInputOption: "RAW",
       requestBody: { values: [HEADERS] },
     });
@@ -54,13 +82,13 @@ async function ensureSheetAndHeaders(sheets, sheetName) {
   // Tab exists — check if headers are already there
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${sheetName}!A1:M1`,
+    range: `${sheetName}!A1:${LAST_COL}1`,
   });
   const first = (res.data.values || [])[0];
-  if (!first || first[0] !== "job_id") {
+  if (!first || first[JOB_ID_COL] !== "job_id") { // check column B
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
-      range: `${sheetName}!A1:M1`,
+      range: `${sheetName}!A1:${LAST_COL}1`,
       valueInputOption: "RAW",
       requestBody: { values: [HEADERS] },
     });
@@ -71,11 +99,11 @@ async function ensureSheetAndHeaders(sheets, sheetName) {
 async function findRow(sheets, sheetName, job_id) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${sheetName}!A:M`,
+    range: `${sheetName}!A:${LAST_COL}`,
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][0] === job_id) return { rowNumber: i + 1, rowData: rows[i] };
+    if (rows[i][JOB_ID_COL] === job_id) return { rowNumber: i + 1, rowData: rows[i] };
   }
   return null;
 }
@@ -91,19 +119,25 @@ async function upsertSentRow(sheetName, job_id, email, emailBody) {
     const existing = await findRow(sheets, sheetName, job_id);
 
     if (existing) {
+      // Only update the "email sent" cell — all other columns are manual
       await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
-        range: `${sheetName}!C${existing.rowNumber}`,
+        range: `${sheetName}!${colLetter(EMAIL_SENT_COL)}${existing.rowNumber}`,
         valueInputOption: "RAW",
         requestBody: { values: [[bodyStr]] },
       });
     } else {
+      // Row not yet in sheet — seed job_id (B) and email (O) so the row is findable
+      const row = Array(HEADERS.length).fill("");
+      row[JOB_ID_COL]     = job_id;
+      row[EMAIL_COL]      = email;
+      row[EMAIL_SENT_COL] = bodyStr;
       await sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID,
-        range: `${sheetName}!A:M`,
+        range: `${sheetName}!A:${LAST_COL}`,
         valueInputOption: "RAW",
         insertDataOption: "INSERT_ROWS",
-        requestBody: { values: [[job_id, email, bodyStr]] },
+        requestBody: { values: [row] },
       });
     }
     console.log(`[sheets] Row upserted — sheet="${sheetName}" job_id=${job_id}`);
@@ -138,14 +172,14 @@ async function appendReply(sheetName, job_id, replyText) {
       return;
     }
 
-    const colLetter = String.fromCharCode(65 + nextCol); // 0→A, 3→D, etc.
+    const col = colLetter(nextCol);
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
-      range: `${sheetName}!${colLetter}${rowNumber}`,
+      range: `${sheetName}!${col}${rowNumber}`,
       valueInputOption: "RAW",
       requestBody: { values: [[replyText]] },
     });
-    console.log(`[sheets] Reply appended — sheet="${sheetName}" job_id=${job_id} col=${colLetter}`);
+    console.log(`[sheets] Reply appended — sheet="${sheetName}" job_id=${job_id} col=${col}`);
   } catch (err) {
     console.error(`[sheets] appendReply failed — job_id=${job_id}: ${err.message}`);
   }
@@ -171,10 +205,10 @@ async function backfillRepliesForJob(sheets, sheetName, job_id, replies) {
   if (toWrite.length === 0) return 0;
 
   for (let i = 0; i < toWrite.length; i++) {
-    const colLetter = String.fromCharCode(65 + REPLY_COL_START + filledCount + i);
+    const col = colLetter(REPLY_COL_START + filledCount + i);
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
-      range: `${sheetName}!${colLetter}${rowNumber}`,
+      range: `${sheetName}!${col}${rowNumber}`,
       valueInputOption: "RAW",
       requestBody: { values: [[toWrite[i].bodyPreview || ""]] },
     });
