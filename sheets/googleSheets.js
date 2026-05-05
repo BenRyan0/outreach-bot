@@ -2,8 +2,9 @@
 
 const { google } = require("googleapis");
 
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const KEY_PATH = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
+const SHEET_ID  = process.env.GOOGLE_SHEET_ID;
+const KEY_PATH  = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
+const COL_OFFSET = parseInt(process.env.SHEET_COL_OFFSET) || 0;
 
 const MISSING_DOCS_SHEET = "Missing Docs";
 const APPROVED_SHEET     = "Approved Applications";
@@ -38,7 +39,7 @@ function colLetter(idx) {
   return col;
 }
 
-const LAST_COL = colLetter(HEADERS.length - 1); // AC
+const LAST_COL = colLetter(HEADERS.length - 1 + COL_OFFSET);
 
 function isConfigured() {
   return !!(SHEET_ID && KEY_PATH);
@@ -69,11 +70,12 @@ async function ensureSheetAndHeaders(sheets, sheetName) {
     console.log(`[sheets] Created sheet tab "${sheetName}"`);
 
     // Write headers immediately — new sheet is guaranteed empty
+    const headerRow = [...Array(COL_OFFSET).fill(""), ...HEADERS];
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
       range: `${sheetName}!A1:${LAST_COL}1`,
       valueInputOption: "RAW",
-      requestBody: { values: [HEADERS] },
+      requestBody: { values: [headerRow] },
     });
     console.log(`[sheets] Headers written to "${sheetName}"`);
     return;
@@ -85,12 +87,13 @@ async function ensureSheetAndHeaders(sheets, sheetName) {
     range: `${sheetName}!A1:${LAST_COL}1`,
   });
   const first = (res.data.values || [])[0];
-  if (!first || first[JOB_ID_COL] !== "job_id") { // check column B
+  if (!first || first[JOB_ID_COL + COL_OFFSET] !== "job_id") {
+    const headerRow = [...Array(COL_OFFSET).fill(""), ...HEADERS];
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
       range: `${sheetName}!A1:${LAST_COL}1`,
       valueInputOption: "RAW",
-      requestBody: { values: [HEADERS] },
+      requestBody: { values: [headerRow] },
     });
     console.log(`[sheets] Headers written to "${sheetName}"`);
   }
@@ -103,7 +106,7 @@ async function findRow(sheets, sheetName, job_id) {
   });
   const rows = res.data.values || [];
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][JOB_ID_COL] === job_id) return { rowNumber: i + 1, rowData: rows[i] };
+    if (rows[i][JOB_ID_COL + COL_OFFSET] === job_id) return { rowNumber: i + 1, rowData: rows[i] };
   }
   return null;
 }
@@ -122,16 +125,16 @@ async function upsertSentRow(sheetName, job_id, email, emailBody) {
       // Only update the "email sent" cell — all other columns are manual
       await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
-        range: `${sheetName}!${colLetter(EMAIL_SENT_COL)}${existing.rowNumber}`,
+        range: `${sheetName}!${colLetter(EMAIL_SENT_COL + COL_OFFSET)}${existing.rowNumber}`,
         valueInputOption: "RAW",
         requestBody: { values: [[bodyStr]] },
       });
     } else {
-      // Row not yet in sheet — seed job_id (B) and email (O) so the row is findable
-      const row = Array(HEADERS.length).fill("");
-      row[JOB_ID_COL]     = job_id;
-      row[EMAIL_COL]      = email;
-      row[EMAIL_SENT_COL] = bodyStr;
+      // Row not yet in sheet — seed job_id, email, and email-sent at their offset positions
+      const row = Array(HEADERS.length + COL_OFFSET).fill("");
+      row[JOB_ID_COL     + COL_OFFSET] = job_id;
+      row[EMAIL_COL      + COL_OFFSET] = email;
+      row[EMAIL_SENT_COL + COL_OFFSET] = bodyStr;
       await sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID,
         range: `${sheetName}!A:${LAST_COL}`,
@@ -161,9 +164,9 @@ async function appendReply(sheetName, job_id, replyText) {
 
     const { rowNumber, rowData } = existing;
 
-    // Find the next empty reply slot
+    // Find the next empty reply slot (indices account for column offset)
     let nextCol = -1;
-    for (let i = REPLY_COL_START; i < REPLY_COL_START + MAX_REPLIES; i++) {
+    for (let i = REPLY_COL_START + COL_OFFSET; i < REPLY_COL_START + COL_OFFSET + MAX_REPLIES; i++) {
       if (!rowData[i]) { nextCol = i; break; }
     }
 
@@ -194,9 +197,9 @@ async function backfillRepliesForJob(sheets, sheetName, job_id, replies) {
 
   const { rowNumber, rowData } = existing;
 
-  // Count consecutively filled reply slots from the start
+  // Count consecutively filled reply slots from the start (indices account for column offset)
   let filledCount = 0;
-  for (let i = REPLY_COL_START; i < REPLY_COL_START + MAX_REPLIES; i++) {
+  for (let i = REPLY_COL_START + COL_OFFSET; i < REPLY_COL_START + COL_OFFSET + MAX_REPLIES; i++) {
     if (rowData[i] && rowData[i].toString().trim()) filledCount++;
     else break;
   }
@@ -205,7 +208,7 @@ async function backfillRepliesForJob(sheets, sheetName, job_id, replies) {
   if (toWrite.length === 0) return 0;
 
   for (let i = 0; i < toWrite.length; i++) {
-    const col = colLetter(REPLY_COL_START + filledCount + i);
+    const col = colLetter(REPLY_COL_START + COL_OFFSET + filledCount + i);
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
       range: `${sheetName}!${col}${rowNumber}`,
